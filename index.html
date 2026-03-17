@@ -3,6 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="V. Gallery">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%23000000'/%3E%3Ctext x='96' y='140' font-size='120' text-anchor='middle' fill='%23D0A380' font-family='Copperplate, Georgia, serif'%3EV%3C/text%3E%3C/svg%3E">
+    
     <title>V. Gallery | Browse & Edit</title>
     <link href="https://fonts.cdnfonts.com/css/copperplate" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -93,7 +101,7 @@
             border-radius: 4px;
             opacity: 1;
             transition: opacity 0.2s;
-            pointer-events: none; /* so it doesn't interfere with clicks */
+            pointer-events: none;
         }
         .site-logo img {
             width: 100%;
@@ -103,8 +111,6 @@
 
         /* ----- SUBTLE BRAND WATERMARK (bottom right, double‑click toggles dark mode) ----- */
         .gallery-brand {
-            
-            
             font-size: 10px;
             color: var(--color-gray);
             opacity: 0.7;
@@ -270,7 +276,7 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            height: auto;  /* height determined by aspect ratio */
+            height: auto;
             max-width: min(450px, 70vh);
             margin: 0 auto;
         }
@@ -728,8 +734,6 @@
         <img src="" alt="Logo" id="logoImage" style="display:none;">
     </div>
 
-    
-
     <!-- INTRO OVERLAY (always visible on refresh) -->
     <div class="intro-overlay" id="introOverlay">
         <div class="intro-content">
@@ -972,10 +976,11 @@
             </div>
         </div>
 
-        <!-- Bottom navigation: only arrows and page indicator (no brand) -->
+        <!-- Bottom navigation: only arrows and page indicator -->
         <nav class="bottom-nav" id="bottomNav">
-            <div class="nav-content"><!-- Subtle Brand Watermark (bottom right, double-click toggles dark mode) -->
-    <div class="gallery-brand" id="galleryBrand">v.gallery.shop</div>
+            <div class="nav-content">
+                <!-- Subtle Brand Watermark (bottom right, double‑click toggles dark mode) -->
+                <div class="gallery-brand" id="galleryBrand">v.gallery.shop</div>
                 <div class="nav-arrows">
                     <button class="arrow-btn prev-product" onclick="VGallery.prevProduct()" disabled>‹</button>
                     <span class="page-indicator" id="pageIndicator">1/1</span>
@@ -1854,6 +1859,17 @@
 
             // Start
             VGallery.init();
+
+            // ----- PWA: Register Service Worker -----
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('sw.js').then(reg => {
+                        console.log('Service Worker registered:', reg.scope);
+                    }).catch(err => {
+                        console.log('Service Worker registration failed:', err);
+                    });
+                });
+            }
         })();
     </script>
 </body>
