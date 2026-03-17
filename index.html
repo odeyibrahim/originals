@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <!-- PWA Meta Tags -->
-    <link rel="manifest" href="manifest.json">
+    <!-- PWA Meta Tags (will be updated dynamically) -->
+    <link rel="manifest" href="manifest.json" id="manifestLink">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="V. Gallery">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%23000000'/%3E%3Ctext x='96' y='140' font-size='120' text-anchor='middle' fill='%23D0A380' font-family='Copperplate, Georgia, serif'%3EV%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%23000000'/%3E%3Ctext x='96' y='140' font-size='120' text-anchor='middle' fill='%23D0A380' font-family='Copperplate, Georgia, serif'%3EV%3C/text%3E%3C/svg%3E" id="appleTouchIcon">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000000'/%3E%3Ctext x='16' y='24' font-size='20' text-anchor='middle' fill='%23D0A380' font-family='Copperplate, Georgia, serif'%3EV%3C/text%3E%3C/svg%3E" id="favicon">
     
     <title>V. Gallery | Browse & Edit</title>
     <link href="https://fonts.cdnfonts.com/css/copperplate" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Open+Sans:wght@300;400;600;700;800&family=Lato:wght@100;300;400;700;900&family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
@@ -89,7 +91,7 @@
             height: 100dvh; /* dynamic viewport height for Safari */
             line-height: 1.5;
             transition: background-color var(--transition-base), color var(--transition-base);
-            touch-action: manipulation; /* prevent double-tap zoom */
+            touch-action: manipulation;
         }
 
         /* ----- SITE LOGO (top left) ----- */
@@ -116,7 +118,6 @@
         .gallery-brand {
             font-size: 10px;
             color: var(--color-gray);
-padding: 0 0 0 10px;
             opacity: 0.7;
             letter-spacing: 1px;
             z-index: var(--z-index-brand);
@@ -312,7 +313,7 @@ padding: 0 0 0 10px;
             max-height: 100%;
             opacity: 0;
             transition: opacity 0.4s ease;
-            touch-action: manipulation; /* prevent zoom on image */
+            touch-action: manipulation;
         }
         .product-image.loaded { opacity:1; }
 
@@ -355,12 +356,14 @@ padding: 0 0 0 10px;
             font-size: 13px;
             line-height: 1.4;
             color: var(--text-secondary);
-font-weight: 400;
             margin-bottom: var(--spacing-md);
             white-space: pre-line;
+text-transform: lowercase;
             font-family: var(--font-serif);
             width: 100%;
             word-break: break-word;
+letter-spacing: 0.4px;
+            transition: font-family 0.2s, font-size 0.2s, font-weight 0.2s, text-transform 0.2s;
         }
 
         .title-author {
@@ -377,7 +380,10 @@ font-weight: 400;
 
         .title-author-text {
             display: flex;
+letter-spacing: 0.3px;
             align-items: center;
+font-weight: 600;
+text-transform: uppercase;
             gap: var(--spacing-xs);
         }
 
@@ -429,7 +435,7 @@ font-weight: 400;
             background: var(--bg-secondary);
             border-top: 1px solid var(--border-color);
             z-index: var(--z-index-nav);
-            padding: 6px 4px;
+            padding: 6px var(--spacing-md);
         }
 
         .nav-content {
@@ -502,37 +508,44 @@ font-weight: 400;
             to { opacity:1; transform:translateY(0); }
         }
 
-        /* Admin panel */
-        .admin-title {
-            font-size: 16px;
-            font-family: var(--font-serif);
+        /* Minimalist admin panel */
+        .admin-panel {
+            max-width: 300px;
             text-align: center;
-            margin-bottom: var(--spacing-md);
+            padding: var(--spacing-md);
         }
-        .admin-progress {
-            text-align: center;
-            font-size: 11px;
-            color: var(--color-gray);
-            margin-bottom: var(--spacing-md);
+        .admin-title {
+            font-size: 14px;
+            font-family: var(--font-serif);
+            margin-bottom: var(--spacing-sm);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .admin-buttons {
             display: flex;
             flex-direction: column;
-            gap: var(--spacing-sm);
+            gap: 8px;
         }
         .admin-btn {
-            padding: 12px;
+            padding: 10px;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            font-size: 12px;
+            font-size: 13px;
             border-radius: 6px;
             cursor: pointer;
+            transition: all 0.2s;
         }
-        .admin-btn:hover { background: var(--color-gray-light); }
-        .admin-btn.delete { color: var(--color-error); border-color: #ffcdd2; }
-        .admin-btn.delete:hover { background: #ffebee; }
-        .admin-btn.add { color: var(--color-primary); }
+        .admin-btn:hover {
+            background: var(--color-gray-light);
+        }
+        .admin-btn.delete {
+            color: var(--color-error);
+            border-color: #ffcdd2;
+        }
+        .admin-btn.delete:hover {
+            background: #ffebee;
+        }
 
         /* Share overlay */
         .share-container {
@@ -594,6 +607,34 @@ font-weight: 400;
             color: var(--color-gray);
             cursor: pointer;
             line-height: 1;
+        }
+
+        /* Product navigation inside edit modal */
+        .product-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 8px;
+        }
+        .product-nav button {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            width: 36px;
+            height: 36px;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+        .product-nav select {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
         }
 
         .edit-section {
@@ -696,6 +737,22 @@ font-weight: 400;
         }
         .edit-actions button.warning { background: var(--color-error); color:white; }
 
+        /* Font style controls */
+        .font-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .font-row select, .font-row input {
+            flex: 1;
+        }
+        .font-row span {
+            min-width: 60px;
+            font-size: 12px;
+            color: var(--color-gray);
+        }
+
         /* Loading & notification */
         .loading {
             position: fixed;
@@ -769,25 +826,31 @@ font-weight: 400;
         </div>
     </div>
 
-    <!-- ADMIN OVERLAY (now protected by passcode) -->
+    <!-- ADMIN OVERLAY (minimalist) -->
     <div class="modal-overlay" id="adminOverlay" onclick="AdminMode.close()">
         <div class="modal-panel admin-panel" onclick="event.stopPropagation()">
-            <div class="admin-title">Admin Mode</div>
-            <div class="admin-progress" id="adminProgress">Hold anywhere for 10 seconds</div>
+            <div class="admin-title">Admin</div>
             <div class="admin-buttons">
-                <button class="admin-btn add" onclick="AdminMode.openEdit()">✎ Edit Current Product</button>
-                <button class="admin-btn delete" onclick="AdminMode.deleteCurrent()">× Delete Current Product</button>
-                <button class="admin-btn close" onclick="AdminMode.close()">Close</button>
+                <button class="admin-btn" onclick="AdminMode.openEdit()">✎ Edit</button>
+                <button class="admin-btn delete" onclick="AdminMode.deleteCurrent()">× Delete</button>
+                <button class="admin-btn" onclick="AdminMode.close()">Close</button>
             </div>
         </div>
     </div>
 
-    <!-- EDIT OVERLAY (cleaner, with logo upload and batch ops) -->
+    <!-- EDIT OVERLAY (with font controls and product navigation) -->
     <div class="modal-overlay" id="editOverlay" onclick="EditMode.close()">
         <div class="modal-panel edit-panel" onclick="event.stopPropagation()">
             <div class="edit-header">
                 <h3>Edit Product</h3>
                 <button class="close-edit" onclick="EditMode.close()">×</button>
+            </div>
+
+            <!-- Product Navigation -->
+            <div class="product-nav">
+                <button onclick="EditMode.prevProduct()" id="editPrevBtn">‹</button>
+                <select id="editProductSelect" onchange="EditMode.selectProduct(this.value)"></select>
+                <button onclick="EditMode.nextProduct()" id="editNextBtn">›</button>
             </div>
 
             <!-- Product Type -->
@@ -826,6 +889,53 @@ font-weight: 400;
 
                 <label style="margin-top:12px;">Description</label>
                 <textarea id="editDescription" placeholder="Product description"></textarea>
+            </div>
+
+            <!-- Description Font Styles (NEW: text-transform) -->
+            <div class="edit-section">
+                <label>Description Style</label>
+                <div class="font-row">
+                    <span>Font</span>
+                    <select id="editFontFamily">
+                        <option value="var(--font-serif)">Copperplate (default)</option>
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Helvetica, sans-serif">Helvetica</option>
+                        <option value="Georgia, serif">Georgia</option>
+                        <option value="Times New Roman, serif">Times New Roman</option>
+                        <option value="Courier New, monospace">Courier New</option>
+                        <option value="'Roboto', sans-serif">Roboto</option>
+                        <option value="'Open Sans', sans-serif">Open Sans</option>
+                        <option value="'Lato', sans-serif">Lato</option>
+                        <option value="'Montserrat', sans-serif">Montserrat</option>
+                        <option value="'Oswald', sans-serif">Oswald</option>
+                    </select>
+                </div>
+                <div class="font-row">
+                    <span>Size (px)</span>
+                    <input type="range" id="editFontSize" min="10" max="32" value="13" step="1">
+                    <span id="fontSizeVal">13px</span>
+                </div>
+                <div class="font-row">
+                    <span>Weight</span>
+                    <select id="editFontWeight">
+                        <option value="300">Light</option>
+                        <option value="400" selected>Regular</option>
+                        <option value="500">Medium</option>
+                        <option value="600">Semi‑Bold</option>
+                        <option value="700">Bold</option>
+                        <option value="800">Extra Bold</option>
+                        <option value="900">Black</option>
+                    </select>
+                </div>
+                <div class="font-row">
+                    <span>Transform</span>
+                    <select id="editTextTransform">
+                        <option value="none">None</option>
+                        <option value="uppercase">UPPERCASE</option>
+                        <option value="lowercase">lowercase</option>
+                        <option value="capitalize">Capitalize</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Orientation & Frame -->
@@ -982,9 +1092,9 @@ font-weight: 400;
                     </div>
                     <div class="title-author-icons">
 
-<button class="icon-button share" id="shareButton" aria-label="Share product">↗</button>
+ <button class="icon-button share" id="shareButton" aria-label="Share product">↗</button>
                         <button class="icon-button heart" id="heartButton" aria-label="Save to wishlist"></button>
-                        
+                       
                     </div>
                 </div>
             </div>
@@ -1007,7 +1117,7 @@ font-weight: 400;
     <!-- Notification -->
     <div class="notification" id="notification"></div>
 
-    <!-- PRODUCT DATA (initial) -->
+    <!-- PRODUCT DATA (initial) - now includes textTransform -->
     <script id="products-data" type="application/json">
     [
         {
@@ -1019,7 +1129,11 @@ font-weight: 400;
             "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800",
             "orientation": "square",
             "background": { "type": "color", "color": "#f8f8f8" },
-            "frame": { "borderWidth":0, "borderColor":"#000000", "padding":0, "objectFit":"contain" }
+            "frame": { "borderWidth":0, "borderColor":"#000000", "padding":0, "objectFit":"contain" },
+            "fontFamily": "var(--font-serif)",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "textTransform": "none"
         },
         {
             "id": 2,
@@ -1030,7 +1144,11 @@ font-weight: 400;
             "image": "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800",
             "orientation": "landscape",
             "background": { "type": "color", "color": "#f8f8f8" },
-            "frame": { "borderWidth":0, "borderColor":"#000000", "padding":0, "objectFit":"contain" }
+            "frame": { "borderWidth":0, "borderColor":"#000000", "padding":0, "objectFit":"contain" },
+            "fontFamily": "var(--font-serif)",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "textTransform": "none"
         },
         {
             "id": 3,
@@ -1041,7 +1159,11 @@ font-weight: 400;
             "image": "https://images.unsplash.com/photo-1578749559196-482c8b9b7f5b?w=800",
             "orientation": "portrait",
             "background": { "type": "color", "color": "#f8f8f8" },
-            "frame": { "borderWidth":0, "borderColor":"#000000", "padding":0, "objectFit":"contain" }
+            "frame": { "borderWidth":0, "borderColor":"#000000", "padding":0, "objectFit":"contain" },
+            "fontFamily": "var(--font-serif)",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "textTransform": "none"
         },
         {
             "id": 4,
@@ -1052,7 +1174,11 @@ font-weight: 400;
             "description": "A moment of peace",
             "orientation": "square",
             "background": { "type": "animated", "animation": "pulse", "color": "#f8f8f8" },
-            "frame": { "borderWidth":1, "borderColor":"#D0A380", "padding":20, "objectFit":"contain" }
+            "frame": { "borderWidth":1, "borderColor":"#D0A380", "padding":20, "objectFit":"contain" },
+            "fontFamily": "var(--font-serif)",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "textTransform": "none"
         }
     ]
     </script>
@@ -1072,12 +1198,48 @@ font-weight: 400;
                 { text: "Walk by faith, not by sight.", reference: "2 Corinthians 5:7" },
                 { text: "Be kind to one another, tenderhearted.", reference: "Ephesians 4:32" },
                 { text: "The truth will set you free.", reference: "John 8:32" },
-                { text: "Hope does not put us to shame.", reference: "Romans 5:5" }
+                { text: "Hope does not put us to shame.", reference: "Romans 5:5" },
+                { text: "For God so loved the world, that he gave his only Son.", reference: "John 3:16" },
+                { text: "I am the way and the truth and the life.", reference: "John 14:6" },
+                { text: "Blessed are the peacemakers, for they shall be called sons of God.", reference: "Matthew 5:9" },
+                { text: "Your word is a lamp to my feet and a light to my path.", reference: "Psalm 119:105" },
+                { text: "The Lord is my light and my salvation; whom shall I fear?", reference: "Psalm 27:1" },
+                { text: "Create in me a clean heart, O God, and renew a right spirit within me.", reference: "Psalm 51:10" },
+                { text: "For I know the plans I have for you, declares the Lord, plans for peace and not for evil.", reference: "Jeremiah 29:11" },
+                { text: "But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness.", reference: "Galatians 5:22" },
+                { text: "And we know that in all things God works for the good of those who love him.", reference: "Romans 8:28" },
+                { text: "I have hidden your word in my heart that I might not sin against you.", reference: "Psalm 119:11" },
+                { text: "The heavens declare the glory of God; the skies proclaim the work of his hands.", reference: "Psalm 19:1" },
+                { text: "Trust in the Lord with all your heart and lean not on your own understanding.", reference: "Proverbs 3:5" },
+                { text: "He heals the brokenhearted and binds up their wounds.", reference: "Psalm 147:3" },
+                { text: "Cast all your anxiety on him because he cares for you.", reference: "1 Peter 5:7" },
+                { text: "I can do all this through him who gives me strength.", reference: "Philippians 4:13" },
+                { text: "The Lord is near to the brokenhearted and saves the crushed in spirit.", reference: "Psalm 34:18" },
+                { text: "But seek first the kingdom of God and his righteousness, and all these things will be added to you.", reference: "Matthew 6:33" },
+                { text: "And the peace of God, which surpasses all understanding, will guard your hearts and your minds in Christ Jesus.", reference: "Philippians 4:7" },
+                { text: "For by grace you have been saved through faith. And this is not your own doing; it is the gift of God.", reference: "Ephesians 2:8" },
+                { text: "Jesus Christ is the same yesterday and today and forever.", reference: "Hebrews 13:8" },
+                { text: "I have fought the good fight, I have finished the race, I have kept the faith.", reference: "2 Timothy 4:7" },
+                { text: "Let everything that has breath praise the Lord! Praise the Lord!", reference: "Psalm 150:6" },
+                { text: "The Lord is gracious and merciful, slow to anger and abounding in steadfast love.", reference: "Psalm 145:8" },
+                { text: "This is the day that the Lord has made; let us rejoice and be glad in it.", reference: "Psalm 118:24" },
+                { text: "But the Lord is faithful; he will strengthen you and guard you from the evil one.", reference: "2 Thessalonians 3:3" },
+                { text: "Commit your work to the Lord, and your plans will be established.", reference: "Proverbs 16:3" },
+                { text: "A friend loves at all times, and a brother is born for adversity.", reference: "Proverbs 17:17" },
+                { text: "Above all, keep loving one another earnestly, since love covers a multitude of sins.", reference: "1 Peter 4:8" },
+                { text: "Let no corrupting talk come out of your mouths, but only such as is good for building up.", reference: "Ephesians 4:29" },
+                { text: "Rejoice in hope, be patient in tribulation, be constant in prayer.", reference: "Romans 12:12" },
+                { text: "Do not be anxious about anything, but in everything by prayer and supplication with thanksgiving let your requests be made known to God.", reference: "Philippians 4:6" },
+                { text: "And let us not grow weary of doing good, for in due season we will reap, if we do not give up.", reference: "Galatians 6:9" },
+                { text: "Be kind to one another, tenderhearted, forgiving one another, as God in Christ forgave you.", reference: "Ephesians 4:32" },
+                { text: "Therefore encourage one another and build one another up, just as you are doing.", reference: "1 Thessalonians 5:11" },
+                { text: "For God gave us a spirit not of fear but of power and love and self-control.", reference: "2 Timothy 1:7" },
+                { text: "Beloved, let us love one another, for love is from God, and whoever loves has been born of God and knows God.", reference: "1 John 4:7" },
+                { text: "And whatever you do, in word or deed, do everything in the name of the Lord Jesus, giving thanks to God the Father through him.", reference: "Colossians 3:17" },
+                { text: "The steadfast love of the Lord never ceases; his mercies never come to an end; they are new every morning; great is your faithfulness.", reference: "Lamentations 3:22-23" }
             ];
 
             const CONFIG = {
-                HOLD_DURATION: 10,
-                ADMIN_PASSCODE: '1234', // <-- Change this to your own passcode
                 STORAGE_KEYS: {
                     PRODUCTS: 'vgallery_products',
                     SAVED: 'vgallery_saved',
@@ -1089,7 +1251,11 @@ font-weight: 400;
                     BORDER_WIDTH: 0,
                     BORDER_COLOR: '#000000',
                     PADDING: 0,
-                    BACKGROUND: { type: 'color', color: '#f8f8f8' }
+                    BACKGROUND: { type: 'color', color: '#f8f8f8' },
+                    FONT_FAMILY: 'var(--font-serif)',
+                    FONT_SIZE: 13,
+                    FONT_WEIGHT: 400,
+                    TEXT_TRANSFORM: 'none'
                 },
                 ORIENTATIONS: {
                     square: '1 / 1',
@@ -1151,13 +1317,17 @@ font-weight: 400;
                 loading: document.getElementById('loading'),
                 notification: document.getElementById('notification'),
                 adminOverlay: document.getElementById('adminOverlay'),
-                adminProgress: document.getElementById('adminProgress'),
                 editOverlay: document.getElementById('editOverlay'),
 
                 // Site logo
                 siteLogo: document.getElementById('siteLogo'),
                 logoImage: document.getElementById('logoImage'),
                 galleryBrand: document.getElementById('galleryBrand'),
+
+                // PWA icons
+                appleTouchIcon: document.getElementById('appleTouchIcon'),
+                favicon: document.getElementById('favicon'),
+                manifestLink: document.getElementById('manifestLink'),
 
                 // Edit form fields
                 edit: {
@@ -1195,7 +1365,17 @@ font-weight: 400;
                     siteBrand: document.getElementById('editSiteBrand'),
                     logoUpload: document.getElementById('editLogoUpload'),
                     logoUrl: document.getElementById('editLogoUrl'),
-                    logoPreviewImg: document.getElementById('logoPreviewImg')
+                    logoPreviewImg: document.getElementById('logoPreviewImg'),
+
+                    // Font controls
+                    fontFamily: document.getElementById('editFontFamily'),
+                    fontSize: document.getElementById('editFontSize'),
+                    fontSizeVal: document.getElementById('fontSizeVal'),
+                    fontWeight: document.getElementById('editFontWeight'),
+                    textTransform: document.getElementById('editTextTransform'),
+
+                    // Product navigation
+                    productSelect: document.getElementById('editProductSelect')
                 }
             };
 
@@ -1227,6 +1407,10 @@ font-weight: 400;
                             if (!p.frame) p.frame = { ...CONFIG.DEFAULTS };
                             if (!p.background) p.background = { ...CONFIG.DEFAULTS.BACKGROUND };
                             if (!p.type) p.type = 'image';
+                            if (!p.fontFamily) p.fontFamily = CONFIG.DEFAULTS.FONT_FAMILY;
+                            if (!p.fontSize) p.fontSize = CONFIG.DEFAULTS.FONT_SIZE;
+                            if (!p.fontWeight) p.fontWeight = CONFIG.DEFAULTS.FONT_WEIGHT;
+                            if (!p.textTransform) p.textTransform = CONFIG.DEFAULTS.TEXT_TRANSFORM;
                         });
 
                         const saved = localStorage.getItem(CONFIG.STORAGE_KEYS.SAVED);
@@ -1251,6 +1435,7 @@ font-weight: 400;
                         State.logoUrl = logo;
                         DOM.logoImage.src = logo;
                         DOM.logoImage.style.display = 'block';
+                        this.updatePWAIcons(logo);
                     }
                 },
                 saveBrandText(text) {
@@ -1263,6 +1448,31 @@ font-weight: 400;
                     localStorage.setItem(CONFIG.STORAGE_KEYS.LOGO_URL, url);
                     DOM.logoImage.src = url;
                     DOM.logoImage.style.display = 'block';
+                    this.updatePWAIcons(url);
+                },
+                updatePWAIcons(logoUrl) {
+                    // Update apple-touch-icon and favicon
+                    DOM.appleTouchIcon.href = logoUrl;
+                    DOM.favicon.href = logoUrl;
+
+                    // Dynamically update manifest icons
+                    const manifest = {
+                        name: "V. Gallery",
+                        short_name: "V.Gallery",
+                        start_url: ".",
+                        display: "standalone",
+                        background_color: "#000000",
+                        theme_color: "#000000",
+                        icons: [
+                            { src: logoUrl, sizes: "192x192", type: "image/png" },
+                            { src: logoUrl, sizes: "512x512", type: "image/png" }
+                        ]
+                    };
+                    const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+                    const manifestURL = URL.createObjectURL(manifestBlob);
+                    DOM.manifestLink.href = manifestURL;
+                    if (window._prevManifestURL) URL.revokeObjectURL(window._prevManifestURL);
+                    window._prevManifestURL = manifestURL;
                 },
                 getRandomVerse() {
                     return BIBLE_VERSES[Math.floor(Math.random() * BIBLE_VERSES.length)];
@@ -1336,7 +1546,11 @@ font-weight: 400;
                         description: 'Use edit mode to create products',
                         orientation: 'square',
                         background: { type: 'color', color: '#f8f8f8' },
-                        frame: { ...CONFIG.DEFAULTS }
+                        frame: { ...CONFIG.DEFAULTS },
+                        fontFamily: CONFIG.DEFAULTS.FONT_FAMILY,
+                        fontSize: CONFIG.DEFAULTS.FONT_SIZE,
+                        fontWeight: CONFIG.DEFAULTS.FONT_WEIGHT,
+                        textTransform: CONFIG.DEFAULTS.TEXT_TRANSFORM
                     }];
                     this.saveToStorage();
                     VGallery.goTo(0);
@@ -1381,7 +1595,6 @@ font-weight: 400;
                     this.setupIntroPage();
                     this.setupEventListeners();
                     this.setupBrandDoubleTap();
-                    AdminMode.setupHold();
 
                     DOM.introOverlay.classList.remove('hidden');
                     DOM.splitContainer.classList.remove('active');
@@ -1440,6 +1653,17 @@ font-weight: 400;
                     DOM.productTitle.textContent = product.title || '';
                     DOM.productCreator.textContent = product.creator || '';
 
+                    // Apply font styles and text transform
+                    DOM.descriptionText.style.fontFamily = product.fontFamily || CONFIG.DEFAULTS.FONT_FAMILY;
+                    DOM.descriptionText.style.fontSize = (product.fontSize || CONFIG.DEFAULTS.FONT_SIZE) + 'px';
+                    DOM.descriptionText.style.fontWeight = product.fontWeight || CONFIG.DEFAULTS.FONT_WEIGHT;
+                    DOM.descriptionText.style.textTransform = product.textTransform || CONFIG.DEFAULTS.TEXT_TRANSFORM;
+                    // Also apply to textContent if visible (text mode)
+                    DOM.textContent.style.fontFamily = product.fontFamily || CONFIG.DEFAULTS.FONT_FAMILY;
+                    DOM.textContent.style.fontSize = (product.fontSize || CONFIG.DEFAULTS.FONT_SIZE) + 'px';
+                    DOM.textContent.style.fontWeight = product.fontWeight || CONFIG.DEFAULTS.FONT_WEIGHT;
+                    DOM.textContent.style.textTransform = product.textTransform || CONFIG.DEFAULTS.TEXT_TRANSFORM;
+
                     Utils.applyBackground(product.background);
 
                     this.updateHeartState();
@@ -1497,14 +1721,12 @@ font-weight: 400;
                 async captureAndShare() {
                     Utils.showLoading(true);
                     
-                    // Store original styles
                     const split = DOM.splitContainer;
                     const originalLogoDisplay = DOM.siteLogo.style.display;
                     const originalSplitPosition = split.style.position;
                     
-                    // Clone the logo to appear inside the capture
                     const logoClone = DOM.siteLogo.cloneNode(true);
-                    logoClone.id = 'logo-clone'; // avoid duplicate id
+                    logoClone.id = 'logo-clone';
                     logoClone.style.position = 'absolute';
                     logoClone.style.top = '20px';
                     logoClone.style.left = '20px';
@@ -1512,13 +1734,8 @@ font-weight: 400;
                     logoClone.style.pointerEvents = 'none';
                     logoClone.style.margin = '0';
                     
-                    // Ensure the split container is relatively positioned
                     split.style.position = 'relative';
-                    
-                    // Hide original fixed logo
                     DOM.siteLogo.style.display = 'none';
-                    
-                    // Append clone
                     split.appendChild(logoClone);
                     
                     try {
@@ -1529,7 +1746,6 @@ font-weight: 400;
                             logging: false
                         });
                         
-                        // Wait for image to be ready (optional)
                         const img = new Image();
                         img.onload = () => {
                             DOM.shareImage.src = canvas.toDataURL('image/png');
@@ -1540,7 +1756,6 @@ font-weight: 400;
                     } catch (e) {
                         Utils.showNotification('Capture failed', 'error');
                     } finally {
-                        // Clean up
                         split.removeChild(logoClone);
                         DOM.siteLogo.style.display = originalLogoDisplay;
                         split.style.position = originalSplitPosition;
@@ -1561,7 +1776,17 @@ font-weight: 400;
                     DOM.heartButton.addEventListener('click', (e) => { e.stopPropagation(); this.toggleSave(); });
                     DOM.shareButton.addEventListener('click', (e) => { e.stopPropagation(); this.captureAndShare(); });
 
-                    // Triple-tap removed – editing now only via passcode-protected admin mode
+                    // Triple-tap on main image opens admin overlay
+                    let tapCount = 0, tapTimer;
+                    DOM.mainImage.addEventListener('click', () => {
+                        tapCount++;
+                        clearTimeout(tapTimer);
+                        tapTimer = setTimeout(() => tapCount = 0, 400);
+                        if (tapCount === 3) {
+                            tapCount = 0;
+                            AdminMode.open();
+                        }
+                    });
 
                     document.addEventListener('keydown', (e) => {
                         if (e.key === 'Escape') {
@@ -1586,50 +1811,8 @@ font-weight: 400;
                 }
             };
 
-            // ---------- ADMIN MODE (now passcode‑protected) ----------
+            // ---------- ADMIN MODE (minimal, triple-tap to open) ----------
             const AdminMode = {
-                holdTimer: null, holdActive: false,
-                setupHold() {
-                    const t = document.body;
-                    t.addEventListener('touchstart', this.startHold.bind(this));
-                    t.addEventListener('mousedown', this.startHold.bind(this));
-                    t.addEventListener('touchend', this.cancelHold.bind(this));
-                    t.addEventListener('mouseup', this.cancelHold.bind(this));
-                    t.addEventListener('touchcancel', this.cancelHold.bind(this));
-                    t.addEventListener('mouseleave', this.cancelHold.bind(this));
-                },
-                startHold(e) {
-                    // Ignore if already in admin mode or editing
-                    if (e.target.closest('button') || e.target.closest('.icon-button') ||
-                        DOM.adminOverlay.classList.contains('active') || !DOM.splitContainer.classList.contains('active') ||
-                        DOM.editOverlay.classList.contains('active') || DOM.shareOverlay.classList.contains('active')) return;
-
-                    this.holdActive = true;
-                    let sec = 0;
-                    DOM.adminProgress.textContent = `Holding: 0/${CONFIG.HOLD_DURATION} seconds`;
-                    this.holdTimer = setInterval(() => {
-                        sec++;
-                        DOM.adminProgress.textContent = `Holding: ${sec}/${CONFIG.HOLD_DURATION} seconds`;
-                        if (sec >= CONFIG.HOLD_DURATION) {
-                            clearInterval(this.holdTimer);
-                            if (this.holdActive) this.verifyPasscode();
-                        }
-                    }, 1000);
-                },
-                cancelHold() {
-                    clearInterval(this.holdTimer);
-                    this.holdActive = false;
-                    DOM.adminProgress.textContent = 'Hold anywhere for 10 seconds';
-                },
-                verifyPasscode() {
-                    const entered = prompt('Enter admin passcode:');
-                    if (entered === CONFIG.ADMIN_PASSCODE) {
-                        this.open();
-                    } else {
-                        Utils.showNotification('Incorrect passcode', 'error');
-                    }
-                    this.cancelHold(); // reset hold progress
-                },
                 open() { DOM.adminOverlay.classList.add('active'); document.body.style.overflow='hidden'; },
                 close() { DOM.adminOverlay.classList.remove('active'); document.body.style.overflow=''; },
                 openEdit() { this.close(); setTimeout(()=>EditMode.open(State.currentIndex),300); },
@@ -1655,6 +1838,9 @@ font-weight: 400;
                     DOM.edit.padding.addEventListener('input', () => {
                         DOM.edit.paddingVal.textContent = DOM.edit.padding.value + 'px';
                     });
+                    DOM.edit.fontSize.addEventListener('input', () => {
+                        DOM.edit.fontSizeVal.textContent = DOM.edit.fontSize.value + 'px';
+                    });
 
                     DOM.edit.productType.addEventListener('change', () => {
                         this.toggleProductTypeControls(DOM.edit.productType.value);
@@ -1662,6 +1848,11 @@ font-weight: 400;
 
                     DOM.edit.bgType.addEventListener('change', () => {
                         this.toggleBackgroundControls(DOM.edit.bgType.value);
+                    });
+
+                    // Populate product dropdown and listen for changes
+                    DOM.edit.productSelect.addEventListener('change', (e) => {
+                        this.loadProduct(parseInt(e.target.value));
                     });
                 },
 
@@ -1688,7 +1879,21 @@ font-weight: 400;
                     }
                 },
 
-                open(index) {
+                // Populate dropdown with current products
+                updateProductSelect() {
+                    const select = DOM.edit.productSelect;
+                    select.innerHTML = '';
+                    State.products.forEach((p, idx) => {
+                        const option = document.createElement('option');
+                        option.value = idx;
+                        option.textContent = `${idx+1}. ${p.title || 'Untitled'}`;
+                        if (idx === this.currentEditIndex) option.selected = true;
+                        select.appendChild(option);
+                    });
+                },
+
+                loadProduct(index) {
+                    if (index < 0 || index >= State.products.length) return;
                     this.currentEditIndex = index;
                     const p = State.products[index];
                     if (!p) return;
@@ -1721,6 +1926,13 @@ font-weight: 400;
                     if (bg.color2) DOM.edit.gradientColor2.value = bg.color2;
                     if (bg.animation) DOM.edit.animationType.value = bg.animation;
 
+                    // Font styles
+                    DOM.edit.fontFamily.value = p.fontFamily || CONFIG.DEFAULTS.FONT_FAMILY;
+                    DOM.edit.fontSize.value = p.fontSize || CONFIG.DEFAULTS.FONT_SIZE;
+                    DOM.edit.fontSizeVal.textContent = (p.fontSize || CONFIG.DEFAULTS.FONT_SIZE) + 'px';
+                    DOM.edit.fontWeight.value = p.fontWeight || CONFIG.DEFAULTS.FONT_WEIGHT;
+                    DOM.edit.textTransform.value = p.textTransform || CONFIG.DEFAULTS.TEXT_TRANSFORM;
+
                     // Site settings
                     DOM.edit.siteBrand.value = State.brandText;
                     DOM.edit.logoUrl.value = State.logoUrl;
@@ -1731,6 +1943,12 @@ font-weight: 400;
                         DOM.edit.logoPreviewImg.style.display = 'none';
                     }
 
+                    this.updateProductSelect(); // ensure dropdown selection matches
+                },
+
+                open(index) {
+                    this.currentEditIndex = index;
+                    this.loadProduct(index);
                     DOM.editOverlay.classList.add('active');
                     document.body.style.overflow = 'hidden';
                 },
@@ -1770,7 +1988,11 @@ font-weight: 400;
                             borderColor: DOM.edit.borderColor.value || '#000000',
                             padding: parseInt(DOM.edit.padding.value,10) || 0,
                             objectFit: DOM.edit.objectFit.value || 'contain'
-                        }
+                        },
+                        fontFamily: DOM.edit.fontFamily.value,
+                        fontSize: parseInt(DOM.edit.fontSize.value,10) || CONFIG.DEFAULTS.FONT_SIZE,
+                        fontWeight: parseInt(DOM.edit.fontWeight.value,10) || CONFIG.DEFAULTS.FONT_WEIGHT,
+                        textTransform: DOM.edit.textTransform.value || CONFIG.DEFAULTS.TEXT_TRANSFORM
                     });
 
                     if (p.type === 'image' && DOM.edit.imageUrl.value) {
@@ -1779,7 +2001,7 @@ font-weight: 400;
 
                     Utils.saveToStorage();
                     VGallery.updateProductDisplay();
-                    this.close();
+                    this.updateProductSelect();
                     Utils.showNotification('Product updated');
                 },
 
@@ -1830,7 +2052,8 @@ font-weight: 400;
                         Utils.saveToStorage();
                         const newIdx = Math.min(this.currentEditIndex, State.products.length-1);
                         VGallery.goTo(newIdx);
-                        this.close();
+                        this.currentEditIndex = newIdx;
+                        this.loadProduct(newIdx);
                         Utils.showNotification('Product deleted');
                     }
                 },
@@ -1845,7 +2068,11 @@ font-weight: 400;
                         image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800',
                         orientation: 'square',
                         background: { ...CONFIG.DEFAULTS.BACKGROUND },
-                        frame: { ...CONFIG.DEFAULTS }
+                        frame: { ...CONFIG.DEFAULTS },
+                        fontFamily: CONFIG.DEFAULTS.FONT_FAMILY,
+                        fontSize: CONFIG.DEFAULTS.FONT_SIZE,
+                        fontWeight: CONFIG.DEFAULTS.FONT_WEIGHT,
+                        textTransform: CONFIG.DEFAULTS.TEXT_TRANSFORM
                     };
                     State.addProduct(newProduct);
                     Utils.saveToStorage();
@@ -1853,6 +2080,27 @@ font-weight: 400;
                     VGallery.goTo(newIdx);
                     this.open(newIdx);
                     Utils.showNotification('New product added');
+                },
+
+                // Navigation in edit mode
+                prevProduct() {
+                    if (this.currentEditIndex > 0) {
+                        this.currentEditIndex--;
+                        this.loadProduct(this.currentEditIndex);
+                    }
+                },
+                nextProduct() {
+                    if (this.currentEditIndex < State.products.length - 1) {
+                        this.currentEditIndex++;
+                        this.loadProduct(this.currentEditIndex);
+                    }
+                },
+                selectProduct(index) {
+                    index = parseInt(index);
+                    if (!isNaN(index) && index >= 0 && index < State.products.length) {
+                        this.currentEditIndex = index;
+                        this.loadProduct(index);
+                    }
                 },
 
                 // Site settings
