@@ -109,12 +109,14 @@
             width: 100%;
             height: auto;
             display: block;
+            z-index:1000;
         }
 
         /* ----- SUBTLE BRAND WATERMARK (bottom right, double‑click toggles dark mode) ----- */
         .gallery-brand {
             font-size: 10px;
             color: var(--color-gray);
+padding: 0 0 0 10px;
             opacity: 0.7;
             letter-spacing: 1px;
             z-index: var(--z-index-brand);
@@ -231,8 +233,8 @@
 
         .split-container.text-mode .description {
             font-size: clamp(10px, 5vh, 13px);
-font-family: 'Roboto Mono', monospace;
-text-align: left;
+            font-family: 'Roboto Mono', monospace;
+            text-align: left;
             line-height: 1.6;
             white-space: pre-line;
         }
@@ -353,6 +355,7 @@ text-align: left;
             font-size: 13px;
             line-height: 1.4;
             color: var(--text-secondary);
+font-weight: 400;
             margin-bottom: var(--spacing-md);
             white-space: pre-line;
             font-family: var(--font-serif);
@@ -415,7 +418,7 @@ text-align: left;
             background-color: rgba(128,128,128,0.1);
         }
         .icon-button:active { transform:scale(0.95); }
-        .icon-button.heart.saved { color: var(--color-heart); }
+        .icon-button.heart.saved { display: none; color: var(--color-heart); }
 
         /* ----- BOTTOM NAVIGATION (only arrows and page indicator) ----- */
         .bottom-nav {
@@ -426,7 +429,7 @@ text-align: left;
             background: var(--bg-secondary);
             border-top: 1px solid var(--border-color);
             z-index: var(--z-index-nav);
-            padding: 6px var(--spacing-md);
+            padding: 6px 4px;
         }
 
         .nav-content {
@@ -766,7 +769,7 @@ text-align: left;
         </div>
     </div>
 
-    <!-- ADMIN OVERLAY -->
+    <!-- ADMIN OVERLAY (now protected by passcode) -->
     <div class="modal-overlay" id="adminOverlay" onclick="AdminMode.close()">
         <div class="modal-panel admin-panel" onclick="event.stopPropagation()">
             <div class="admin-title">Admin Mode</div>
@@ -978,8 +981,10 @@ text-align: left;
                         <span id="productCreator"></span>
                     </div>
                     <div class="title-author-icons">
-                        <button class="icon-button heart" id="heartButton" aria-label="Save to wishlist">♡</button>
-                        <button class="icon-button share" id="shareButton" aria-label="Share product">↗</button>
+
+<button class="icon-button share" id="shareButton" aria-label="Share product">↗</button>
+                        <button class="icon-button heart" id="heartButton" aria-label="Save to wishlist"></button>
+                        
                     </div>
                 </div>
             </div>
@@ -1072,6 +1077,7 @@ text-align: left;
 
             const CONFIG = {
                 HOLD_DURATION: 10,
+                ADMIN_PASSCODE: '1234', // <-- Change this to your own passcode
                 STORAGE_KEYS: {
                     PRODUCTS: 'vgallery_products',
                     SAVED: 'vgallery_saved',
@@ -1490,19 +1496,54 @@ text-align: left;
                 },
                 async captureAndShare() {
                     Utils.showLoading(true);
+                    
+                    // Store original styles
+                    const split = DOM.splitContainer;
+                    const originalLogoDisplay = DOM.siteLogo.style.display;
+                    const originalSplitPosition = split.style.position;
+                    
+                    // Clone the logo to appear inside the capture
+                    const logoClone = DOM.siteLogo.cloneNode(true);
+                    logoClone.id = 'logo-clone'; // avoid duplicate id
+                    logoClone.style.position = 'absolute';
+                    logoClone.style.top = '20px';
+                    logoClone.style.left = '20px';
+                    logoClone.style.zIndex = '10000';
+                    logoClone.style.pointerEvents = 'none';
+                    logoClone.style.margin = '0';
+                    
+                    // Ensure the split container is relatively positioned
+                    split.style.position = 'relative';
+                    
+                    // Hide original fixed logo
+                    DOM.siteLogo.style.display = 'none';
+                    
+                    // Append clone
+                    split.appendChild(logoClone);
+                    
                     try {
-                        const canvas = await html2canvas(DOM.splitContainer, {
+                        const canvas = await html2canvas(split, {
                             scale: 3,
                             backgroundColor: document.body.classList.contains('dark-mode') ? '#121212' : '#ffffff',
                             useCORS: true,
                             logging: false
                         });
-                        DOM.shareImage.src = canvas.toDataURL('image/png');
-                        DOM.shareOverlay.classList.add('active');
-                        document.body.style.overflow = 'hidden';
+                        
+                        // Wait for image to be ready (optional)
+                        const img = new Image();
+                        img.onload = () => {
+                            DOM.shareImage.src = canvas.toDataURL('image/png');
+                            DOM.shareOverlay.classList.add('active');
+                            document.body.style.overflow = 'hidden';
+                        };
+                        img.src = canvas.toDataURL('image/png');
                     } catch (e) {
                         Utils.showNotification('Capture failed', 'error');
                     } finally {
+                        // Clean up
+                        split.removeChild(logoClone);
+                        DOM.siteLogo.style.display = originalLogoDisplay;
+                        split.style.position = originalSplitPosition;
                         Utils.showLoading(false);
                     }
                 },
@@ -1520,16 +1561,7 @@ text-align: left;
                     DOM.heartButton.addEventListener('click', (e) => { e.stopPropagation(); this.toggleSave(); });
                     DOM.shareButton.addEventListener('click', (e) => { e.stopPropagation(); this.captureAndShare(); });
 
-                    let tapCount = 0, tapTimer;
-                    DOM.mainImage.addEventListener('click', () => {
-                        tapCount++;
-                        clearTimeout(tapTimer);
-                        tapTimer = setTimeout(() => tapCount=0, 400);
-                        if (tapCount === 3) {
-                            tapCount = 0;
-                            EditMode.open(State.currentIndex);
-                        }
-                    });
+                    // Triple-tap removed – editing now only via passcode-protected admin mode
 
                     document.addEventListener('keydown', (e) => {
                         if (e.key === 'Escape') {
@@ -1554,7 +1586,7 @@ text-align: left;
                 }
             };
 
-            // ---------- ADMIN MODE ----------
+            // ---------- ADMIN MODE (now passcode‑protected) ----------
             const AdminMode = {
                 holdTimer: null, holdActive: false,
                 setupHold() {
@@ -1567,6 +1599,7 @@ text-align: left;
                     t.addEventListener('mouseleave', this.cancelHold.bind(this));
                 },
                 startHold(e) {
+                    // Ignore if already in admin mode or editing
                     if (e.target.closest('button') || e.target.closest('.icon-button') ||
                         DOM.adminOverlay.classList.contains('active') || !DOM.splitContainer.classList.contains('active') ||
                         DOM.editOverlay.classList.contains('active') || DOM.shareOverlay.classList.contains('active')) return;
@@ -1579,7 +1612,7 @@ text-align: left;
                         DOM.adminProgress.textContent = `Holding: ${sec}/${CONFIG.HOLD_DURATION} seconds`;
                         if (sec >= CONFIG.HOLD_DURATION) {
                             clearInterval(this.holdTimer);
-                            if (this.holdActive) this.open();
+                            if (this.holdActive) this.verifyPasscode();
                         }
                     }, 1000);
                 },
@@ -1588,7 +1621,16 @@ text-align: left;
                     this.holdActive = false;
                     DOM.adminProgress.textContent = 'Hold anywhere for 10 seconds';
                 },
-                open() { DOM.adminOverlay.classList.add('active'); document.body.style.overflow='hidden'; this.cancelHold(); },
+                verifyPasscode() {
+                    const entered = prompt('Enter admin passcode:');
+                    if (entered === CONFIG.ADMIN_PASSCODE) {
+                        this.open();
+                    } else {
+                        Utils.showNotification('Incorrect passcode', 'error');
+                    }
+                    this.cancelHold(); // reset hold progress
+                },
+                open() { DOM.adminOverlay.classList.add('active'); document.body.style.overflow='hidden'; },
                 close() { DOM.adminOverlay.classList.remove('active'); document.body.style.overflow=''; },
                 openEdit() { this.close(); setTimeout(()=>EditMode.open(State.currentIndex),300); },
                 deleteCurrent() {
