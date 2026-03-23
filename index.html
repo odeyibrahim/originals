@@ -58,6 +58,7 @@
             --z-index-modal: 2000;
             --z-index-loading: 3000;
             --z-index-brand: 10000;
+            --z-index-grid: 1500;
         }
 
         body.dark-mode {
@@ -118,7 +119,7 @@
         .gallery-brand {
             font-size: 10px;
             color: var(--color-gray);
-padding-left: 10px;
+            padding-left: 10px;
             opacity: 0.7;
             letter-spacing: 1px;
             z-index: var(--z-index-brand);
@@ -142,7 +143,7 @@ padding-left: 10px;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--bg-primary);
+            background: #1a1a1a;
             z-index: calc(var(--z-index-modal) + 100);
             display: flex;
             align-items: center;
@@ -172,7 +173,7 @@ padding-left: 10px;
         .intro-poem {
             font-size: clamp(18px, 4vh, 18px);
             line-height: 1.6;
-            color: var(--text-primary);
+            color: #ccc;
             margin-bottom: var(--spacing-md);
             white-space: pre-line;
             font-family: var(--font-serif);
@@ -181,17 +182,18 @@ padding-left: 10px;
 
         .intro-reference {
             font-size: 14px;
-            color: var(--color-secondary);
+            color: #ccc;
             margin-bottom: 50px;
             font-family: var(--font-sans);
         }
 
         .enter-gallery {
             background: none;
-            border: 1px solid var(--color-primary);
-            color: var(--color-primary);
+            border: 0px solid #ccc;
+            color: #ccc;
             padding: 12px 32px;
-            font-size: 11px;
+            font-size: 40px;
+            cursor: pointer;
             font-family: var(--font-serif);
             cursor: pointer;
             transition: var(--transition-base);
@@ -305,7 +307,7 @@ padding-left: 10px;
             justify-content: center;
         }
 
-        .product-image {
+        .product-image, .product-video {
             width: 100%;
             height: 100%;
             object-fit: contain;
@@ -316,7 +318,15 @@ padding-left: 10px;
             transition: opacity 0.4s ease;
             touch-action: manipulation;
         }
-        .product-image.loaded { opacity:1; }
+        
+        .product-video {
+            object-fit: contain;
+            background: transparent;
+        }
+        
+        .product-image.loaded, .product-video.loaded { 
+            opacity: 1; 
+        }
 
         .text-content {
             width: 100%;
@@ -354,16 +364,15 @@ padding-left: 10px;
         }
 
         .description {
-            font-size: 13px;
-            line-height: 1.4;
+            font-size: 12px;
+            line-height: 1.2;
             color: var(--text-secondary);
             margin-bottom: var(--spacing-md);
             white-space: pre-line;
-
             font-family: var(--font-serif);
             width: 100%;
             word-break: break-word;
-letter-spacing: 0.2px;
+            letter-spacing: 0.1px;
             transition: font-family 0.2s, font-size 0.2s, font-weight 0.2s, text-transform 0.2s;
         }
 
@@ -381,10 +390,9 @@ letter-spacing: 0.2px;
 
         .title-author-text {
             display: flex;
-letter-spacing: 0.3px;
+            letter-spacing: 0.3px;
             align-items: center;
-font-weight: 500;
-text-transform: uppercase;
+            text-transform: uppercase;
             gap: var(--spacing-xs);
         }
 
@@ -399,7 +407,7 @@ text-transform: uppercase;
             overflow: hidden;
             text-overflow: none;
             max-width: 200px;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-secondary);
         }
         .separator {
@@ -437,6 +445,11 @@ text-transform: uppercase;
             border-top: 1px solid var(--border-color);
             z-index: var(--z-index-nav);
             padding: 4px 4px;
+            transition: transform 0.3s ease;
+        }
+
+        .bottom-nav.grid-visible {
+            transform: translateY(-50vh);
         }
 
         .nav-content {
@@ -476,6 +489,88 @@ text-transform: uppercase;
             color: var(--color-gray);
             min-width: 40px;
             text-align: center;
+        }
+
+        /* ----- PRODUCT GRID (appears on nav hold) ----- */
+        .product-grid-overlay {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50vh;
+            background: var(--bg-primary);
+            border-top: 2px solid var(--color-secondary);
+            z-index: var(--z-index-grid);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+            padding: var(--spacing-lg);
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+        }
+
+        .product-grid-overlay.visible {
+            transform: translateY(0);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-md);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .grid-item {
+            aspect-ratio: 1 / 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-xs);
+        }
+
+        .grid-item:hover {
+            transform: scale(1.05);
+            border-color: var(--color-secondary);
+        }
+
+        .grid-item.active {
+            border: 2px solid var(--color-secondary);
+        }
+
+        .grid-item img,
+        .grid-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .grid-item .text-preview {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: var(--spacing-xs);
+            background: var(--bg-secondary);
+        }
+
+        .grid-title {
+            font-size: 10px;
+            margin-top: var(--spacing-xs);
+            color: var(--text-secondary);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* ----- MODAL OVERLAYS ----- */
@@ -809,7 +904,7 @@ text-transform: uppercase;
         <div class="intro-content">
             <div class="intro-poem" id="introPoem">Be still, and know that I am God.</div>
             <div class="intro-reference" id="introReference">— Psalm 46:10</div>
-            <button class="enter-gallery" onclick="VGallery.enterGallery()">Enter Gallery</button>
+            <button class="enter-gallery" onclick="VGallery.enterGallery()">➳</button>
         </div>
     </div>
 
@@ -859,19 +954,41 @@ text-transform: uppercase;
                 <label>Product Type</label>
                 <select id="editProductType">
                     <option value="image">Image</option>
+                    <option value="video">Video</option>
                     <option value="text">Text</option>
                 </select>
             </div>
 
-            <!-- Image controls -->
-            <div id="imageControls" class="edit-section">
-                <label>Product Image</label>
-                <div class="image-upload-row">
-                    <input type="file" id="editImageUpload" accept="image/*">
-                    <button type="button" onclick="EditMode.uploadImage()">Upload</button>
+            <!-- Image/Video controls -->
+            <div id="mediaControls" class="edit-section">
+                <label>Media Type</label>
+                <select id="editMediaType">
+                    <option value="image">Image</option>
+                    <option value="video">Video</option>
+                </select>
+                
+                <div id="mediaUploadRow" class="image-upload-row" style="margin-top:10px;">
+                    <input type="file" id="editMediaUpload" accept="image/*,video/*">
+                    <button type="button" onclick="EditMode.uploadMedia()">Upload</button>
                 </div>
-                <input type="url" id="editImageUrl" placeholder="or image URL">
-                <button type="button" onclick="EditMode.setImageFromUrl()" style="width:100%; margin-top:5px;">Load from URL</button>
+                <input type="url" id="editMediaUrl" placeholder="or media URL (image/video)">
+                <button type="button" onclick="EditMode.setMediaFromUrl()" style="width:100%; margin-top:5px;">Load from URL</button>
+                
+                <!-- Video controls (shown only for video) -->
+                <div id="videoControls" style="margin-top:10px; display:none;">
+                    <label>Video Options</label>
+                    <div style="display:flex; gap:10px; margin-top:5px;">
+                        <label style="display:flex; align-items:center;">
+                            <input type="checkbox" id="editVideoAutoplay"> Autoplay
+                        </label>
+                        <label style="display:flex; align-items:center;">
+                            <input type="checkbox" id="editVideoLoop"> Loop
+                        </label>
+                        <label style="display:flex; align-items:center;">
+                            <input type="checkbox" id="editVideoMuted" checked> Muted
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <!-- Text controls -->
@@ -892,7 +1009,7 @@ text-transform: uppercase;
                 <textarea id="editDescription" placeholder="Product description"></textarea>
             </div>
 
-            <!-- Description Font Styles (NEW: text-transform) -->
+            <!-- Description Font Styles -->
             <div class="edit-section">
                 <label>Description Style</label>
                 <div class="font-row">
@@ -964,7 +1081,7 @@ text-transform: uppercase;
                     <span id="paddingVal">0px</span>
                 </div>
 
-                <label style="margin-top:12px;">Image fit</label>
+                <label style="margin-top:12px;">Media fit</label>
                 <select id="editObjectFit">
                     <option value="cover">Cover (fills frame, may crop)</option>
                     <option value="contain" selected>Contain (fits entirely)</option>
@@ -1074,7 +1191,8 @@ text-transform: uppercase;
             <div class="frame-container" id="frameContainer">
                 <div class="product-frame" id="productFrame">
                     <div class="frame-inner">
-                        <img src="" alt="" class="product-image" id="mainImage" crossorigin="anonymous" loading="eager">
+                        <img src="" alt="" class="product-image" id="mainImage" crossorigin="anonymous" loading="eager" style="display:none;">
+                        <video class="product-video" id="mainVideo" playsinline controls style="display:none;"></video>
                         <div class="text-content" id="textContent" style="display:none;"></div>
                     </div>
                 </div>
@@ -1092,10 +1210,8 @@ text-transform: uppercase;
                         <span id="productCreator"></span>
                     </div>
                     <div class="title-author-icons">
-
- <button class="icon-button share" id="shareButton" aria-label="Share product">↗</button>
+                        <button class="icon-button share" id="shareButton" aria-label="Share product">↗</button>
                         <button class="icon-button heart" id="heartButton" aria-label="Save to wishlist"></button>
-                       
                     </div>
                 </div>
             </div>
@@ -1115,15 +1231,21 @@ text-transform: uppercase;
         </nav>
     </div>
 
+    <!-- PRODUCT GRID OVERLAY (appears on nav hold) -->
+    <div class="product-grid-overlay" id="productGrid">
+        <div class="grid-container" id="gridContainer"></div>
+    </div>
+
     <!-- Notification -->
     <div class="notification" id="notification"></div>
 
-    <!-- PRODUCT DATA (initial) - now includes textTransform -->
+    <!-- PRODUCT DATA (initial) - now includes video support -->
     <script id="products-data" type="application/json">
     [
         {
             "id": 1,
             "type": "image",
+            "mediaType": "image",
             "title": "Archive Tee",
             "creator": "V.",
             "description": "Archive Tee\n100% Cotton\nScreen printed\nMade in USA",
@@ -1139,6 +1261,7 @@ text-transform: uppercase;
         {
             "id": 2,
             "type": "image",
+            "mediaType": "image",
             "title": "Desert Landscape Print",
             "creator": "V.",
             "description": "Archival photograph\nSigned and numbered\nLimited edition of 50",
@@ -1154,6 +1277,7 @@ text-transform: uppercase;
         {
             "id": 3,
             "type": "image",
+            "mediaType": "image",
             "title": "Handmade Ceramic Vase",
             "creator": "V.",
             "description": "Wheel-thrown stoneware\nUnique piece\nGlazed in matte finish",
@@ -1168,6 +1292,23 @@ text-transform: uppercase;
         },
         {
             "id": 4,
+            "type": "video",
+            "mediaType": "video",
+            "title": "Meditation Loop",
+            "creator": "V.",
+            "description": "A moment of peace\nCalming visuals",
+            "image": "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+            "orientation": "landscape",
+            "background": { "type": "animated", "animation": "pulse", "color": "#f8f8f8" },
+            "frame": { "borderWidth":0, "borderColor":"#D0A380", "padding":0, "objectFit":"contain" },
+            "fontFamily": "var(--font-serif)",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "textTransform": "none",
+            "videoOptions": { "autoplay": true, "loop": true, "muted": true }
+        },
+        {
+            "id": 5,
             "type": "text",
             "title": "Meditation",
             "creator": "V.",
@@ -1256,7 +1397,8 @@ text-transform: uppercase;
                     FONT_FAMILY: 'var(--font-serif)',
                     FONT_SIZE: 13,
                     FONT_WEIGHT: 400,
-                    TEXT_TRANSFORM: 'none'
+                    TEXT_TRANSFORM: 'none',
+                    VIDEO_OPTIONS: { autoplay: true, loop: true, muted: true }
                 },
                 ORIENTATIONS: {
                     square: '1 / 1',
@@ -1302,6 +1444,7 @@ text-transform: uppercase;
                 productHalf: document.getElementById('productHalf'),
                 infoHalf: document.getElementById('infoHalf'),
                 mainImage: document.getElementById('mainImage'),
+                mainVideo: document.getElementById('mainVideo'),
                 textContent: document.getElementById('textContent'),
                 descriptionText: document.getElementById('descriptionText'),
                 productTitle: document.getElementById('productTitle'),
@@ -1311,7 +1454,7 @@ text-transform: uppercase;
                 pageIndicator: document.getElementById('pageIndicator'),
                 frameContainer: document.getElementById('frameContainer'),
                 productFrame: document.getElementById('productFrame'),
-                bottomNav: document.querySelector('.bottom-nav'),
+                bottomNav: document.getElementById('bottomNav'),
                 navContent: document.querySelector('.nav-content'),
                 shareOverlay: document.getElementById('shareOverlay'),
                 shareImage: document.getElementById('shareImage'),
@@ -1319,6 +1462,8 @@ text-transform: uppercase;
                 notification: document.getElementById('notification'),
                 adminOverlay: document.getElementById('adminOverlay'),
                 editOverlay: document.getElementById('editOverlay'),
+                productGrid: document.getElementById('productGrid'),
+                gridContainer: document.getElementById('gridContainer'),
 
                 // Site logo
                 siteLogo: document.getElementById('siteLogo'),
@@ -1333,7 +1478,14 @@ text-transform: uppercase;
                 // Edit form fields
                 edit: {
                     productType: document.getElementById('editProductType'),
-                    imageControls: document.getElementById('imageControls'),
+                    mediaControls: document.getElementById('mediaControls'),
+                    mediaType: document.getElementById('editMediaType'),
+                    mediaUpload: document.getElementById('editMediaUpload'),
+                    mediaUrl: document.getElementById('editMediaUrl'),
+                    videoControls: document.getElementById('videoControls'),
+                    videoAutoplay: document.getElementById('editVideoAutoplay'),
+                    videoLoop: document.getElementById('editVideoLoop'),
+                    videoMuted: document.getElementById('editVideoMuted'),
                     textControls: document.getElementById('textControls'),
                     title: document.getElementById('editTitle'),
                     creator: document.getElementById('editCreator'),
@@ -1344,8 +1496,6 @@ text-transform: uppercase;
                     borderColor: document.getElementById('editBorderColor'),
                     padding: document.getElementById('editPadding'),
                     objectFit: document.getElementById('editObjectFit'),
-                    imageUrl: document.getElementById('editImageUrl'),
-                    imageUpload: document.getElementById('editImageUpload'),
                     borderWidthVal: document.getElementById('borderWidthVal'),
                     paddingVal: document.getElementById('paddingVal'),
 
@@ -1408,10 +1558,12 @@ text-transform: uppercase;
                             if (!p.frame) p.frame = { ...CONFIG.DEFAULTS };
                             if (!p.background) p.background = { ...CONFIG.DEFAULTS.BACKGROUND };
                             if (!p.type) p.type = 'image';
+                            if (!p.mediaType) p.mediaType = p.type === 'video' ? 'video' : 'image';
                             if (!p.fontFamily) p.fontFamily = CONFIG.DEFAULTS.FONT_FAMILY;
                             if (!p.fontSize) p.fontSize = CONFIG.DEFAULTS.FONT_SIZE;
                             if (!p.fontWeight) p.fontWeight = CONFIG.DEFAULTS.FONT_WEIGHT;
                             if (!p.textTransform) p.textTransform = CONFIG.DEFAULTS.TEXT_TRANSFORM;
+                            if (!p.videoOptions) p.videoOptions = { ...CONFIG.DEFAULTS.VIDEO_OPTIONS };
                         });
 
                         const saved = localStorage.getItem(CONFIG.STORAGE_KEYS.SAVED);
@@ -1452,11 +1604,9 @@ text-transform: uppercase;
                     this.updatePWAIcons(url);
                 },
                 updatePWAIcons(logoUrl) {
-                    // Update apple-touch-icon and favicon
                     DOM.appleTouchIcon.href = logoUrl;
                     DOM.favicon.href = logoUrl;
 
-                    // Dynamically update manifest icons
                     const manifest = {
                         name: "V. Gallery",
                         short_name: "V.Gallery",
@@ -1507,7 +1657,6 @@ text-transform: uppercase;
                             break;
                     }
                 },
-                // Batch operations
                 exportProducts() {
                     const dataStr = JSON.stringify(State.products, null, 2);
                     const blob = new Blob([dataStr], { type: 'application/json' });
@@ -1585,6 +1734,65 @@ text-transform: uppercase;
                     pdf.save(`vgallery_${new Date().toISOString().slice(0,10)}.pdf`);
                     this.showLoading(false);
                     this.showNotification('PDF generated');
+                },
+                
+                // Update product grid
+                updateProductGrid() {
+                    DOM.gridContainer.innerHTML = '';
+                    State.products.forEach((product, index) => {
+                        const item = document.createElement('div');
+                        item.className = 'grid-item';
+                        if (index === State.currentIndex) {
+                            item.classList.add('active');
+                        }
+                        
+                        if (product.type === 'text') {
+                            const textPreview = document.createElement('div');
+                            textPreview.className = 'text-preview';
+                            textPreview.textContent = (product.content || product.title || 'Text').substring(0, 20);
+                            item.appendChild(textPreview);
+                        } else if (product.type === 'video' || product.mediaType === 'video') {
+                            const video = document.createElement('video');
+                            video.src = product.image || '';
+                            video.muted = true;
+                            video.loop = true;
+                            video.playsinline = true;
+                            video.addEventListener('mouseenter', () => video.play());
+                            video.addEventListener('mouseleave', () => {
+                                video.pause();
+                                video.currentTime = 0;
+                            });
+                            item.appendChild(video);
+                        } else {
+                            const img = document.createElement('img');
+                            img.src = product.image || '';
+                            img.alt = product.title || '';
+                            item.appendChild(img);
+                        }
+                        
+                        const title = document.createElement('div');
+                        title.className = 'grid-title';
+                        title.textContent = product.title || 'Untitled';
+                        item.appendChild(title);
+                        
+                        item.addEventListener('click', () => {
+                            VGallery.goTo(index);
+                            this.hideProductGrid();
+                        });
+                        
+                        DOM.gridContainer.appendChild(item);
+                    });
+                },
+                
+                showProductGrid() {
+                    this.updateProductGrid();
+                    DOM.productGrid.classList.add('visible');
+                    DOM.bottomNav.classList.add('grid-visible');
+                },
+                
+                hideProductGrid() {
+                    DOM.productGrid.classList.remove('visible');
+                    DOM.bottomNav.classList.remove('grid-visible');
                 }
             };
 
@@ -1596,6 +1804,7 @@ text-transform: uppercase;
                     this.setupIntroPage();
                     this.setupEventListeners();
                     this.setupBrandDoubleTap();
+                    this.setupGridHold();
 
                     DOM.introOverlay.classList.remove('hidden');
                     DOM.splitContainer.classList.remove('active');
@@ -1619,6 +1828,45 @@ text-transform: uppercase;
                         }
                     });
                 },
+                setupGridHold() {
+                    let holdTimer;
+                    
+                    DOM.bottomNav.addEventListener('touchstart', (e) => {
+                        holdTimer = setTimeout(() => {
+                            Utils.showProductGrid();
+                        }, 3000); // 3 second hold
+                    });
+                    
+                    DOM.bottomNav.addEventListener('touchend', () => {
+                        clearTimeout(holdTimer);
+                    });
+                    
+                    DOM.bottomNav.addEventListener('touchcancel', () => {
+                        clearTimeout(holdTimer);
+                    });
+                    
+                    // Also support mouse for testing
+                    DOM.bottomNav.addEventListener('mousedown', () => {
+                        holdTimer = setTimeout(() => {
+                            Utils.showProductGrid();
+                        }, 3000);
+                    });
+                    
+                    DOM.bottomNav.addEventListener('mouseup', () => {
+                        clearTimeout(holdTimer);
+                    });
+                    
+                    DOM.bottomNav.addEventListener('mouseleave', () => {
+                        clearTimeout(holdTimer);
+                    });
+                    
+                    // Hide grid when clicking outside
+                    document.addEventListener('click', (e) => {
+                        if (!DOM.productGrid.contains(e.target) && !DOM.bottomNav.contains(e.target)) {
+                            Utils.hideProductGrid();
+                        }
+                    });
+                },
                 enterGallery() {
                     DOM.introOverlay.classList.add('hidden');
                     DOM.splitContainer.classList.add('active');
@@ -1632,22 +1880,55 @@ text-transform: uppercase;
                     DOM.productFrame.className = 'product-frame';
                     DOM.productFrame.classList.add(`orientation-${product.orientation}`);
 
+                    // Hide all media elements first
+                    DOM.mainImage.style.display = 'none';
+                    DOM.mainVideo.style.display = 'none';
+                    DOM.textContent.style.display = 'none';
+
                     if (product.type === 'text') {
                         DOM.splitContainer.classList.add('text-mode');
-                        DOM.mainImage.style.display = 'none';
                         DOM.textContent.style.display = 'flex';
                         DOM.textContent.textContent = product.content || product.description || '';
                     } else {
                         DOM.splitContainer.classList.remove('text-mode');
-                        DOM.mainImage.style.display = 'block';
-                        DOM.textContent.style.display = 'none';
-                        DOM.mainImage.src = product.image;
-                        DOM.mainImage.alt = product.title;
-                        DOM.mainImage.onload = () => DOM.mainImage.classList.add('loaded');
-                        DOM.mainImage.onerror = () => {
-                            DOM.mainImage.src = 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800';
-                            DOM.mainImage.classList.add('loaded');
-                        };
+                        
+                        if (product.type === 'video' || product.mediaType === 'video') {
+                            // Video mode - play within frame
+                            DOM.mainVideo.style.display = 'block';
+                            DOM.mainVideo.src = product.image || '';
+                            DOM.mainVideo.controls = true;
+                            DOM.mainVideo.autoplay = product.videoOptions?.autoplay || false;
+                            DOM.mainVideo.loop = product.videoOptions?.loop || false;
+                            DOM.mainVideo.muted = product.videoOptions?.muted || true;
+                            DOM.mainVideo.playsinline = true;
+                            
+                            // Ensure video stays within frame
+                            DOM.mainVideo.style.maxWidth = '100%';
+                            DOM.mainVideo.style.maxHeight = '100%';
+                            DOM.mainVideo.style.width = '100%';
+                            DOM.mainVideo.style.height = '100%';
+                            
+                            DOM.mainVideo.onloadeddata = () => {
+                                DOM.mainVideo.classList.add('loaded');
+                                if (product.videoOptions?.autoplay) {
+                                    DOM.mainVideo.play().catch(e => console.log('Autoplay prevented:', e));
+                                }
+                            };
+                            DOM.mainVideo.onerror = () => {
+                                DOM.mainVideo.src = 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4';
+                                DOM.mainVideo.classList.add('loaded');
+                            };
+                        } else {
+                            // Image mode
+                            DOM.mainImage.style.display = 'block';
+                            DOM.mainImage.src = product.image || '';
+                            DOM.mainImage.alt = product.title;
+                            DOM.mainImage.onload = () => DOM.mainImage.classList.add('loaded');
+                            DOM.mainImage.onerror = () => {
+                                DOM.mainImage.src = 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800';
+                                DOM.mainImage.classList.add('loaded');
+                            };
+                        }
                     }
 
                     DOM.descriptionText.textContent = product.description || '';
@@ -1659,7 +1940,6 @@ text-transform: uppercase;
                     DOM.descriptionText.style.fontSize = (product.fontSize || CONFIG.DEFAULTS.FONT_SIZE) + 'px';
                     DOM.descriptionText.style.fontWeight = product.fontWeight || CONFIG.DEFAULTS.FONT_WEIGHT;
                     DOM.descriptionText.style.textTransform = product.textTransform || CONFIG.DEFAULTS.TEXT_TRANSFORM;
-                    // Also apply to textContent if visible (text mode)
                     DOM.textContent.style.fontFamily = product.fontFamily || CONFIG.DEFAULTS.FONT_FAMILY;
                     DOM.textContent.style.fontSize = (product.fontSize || CONFIG.DEFAULTS.FONT_SIZE) + 'px';
                     DOM.textContent.style.fontWeight = product.fontWeight || CONFIG.DEFAULTS.FONT_WEIGHT;
@@ -1675,7 +1955,10 @@ text-transform: uppercase;
                     const frame = product.frame || CONFIG.DEFAULTS;
                     DOM.productFrame.style.border = `${frame.borderWidth}px solid ${frame.borderColor}`;
                     DOM.productFrame.style.padding = frame.padding + 'px';
+                    
+                    // Apply object-fit to both image and video
                     DOM.mainImage.style.objectFit = frame.objectFit;
+                    DOM.mainVideo.style.objectFit = frame.objectFit;
                 },
                 updateHeartState() {
                     const isSaved = State.savedItems.has(State.getCurrentProduct().id);
@@ -1691,12 +1974,14 @@ text-transform: uppercase;
                     if (State.currentIndex < State.products.length-1) {
                         State.currentIndex++;
                         this.updateProductDisplay();
+                        Utils.hideProductGrid();
                     }
                 },
                 prevProduct() {
                     if (State.currentIndex > 0) {
                         State.currentIndex--;
                         this.updateProductDisplay();
+                        Utils.hideProductGrid();
                     }
                 },
                 goTo(index) {
@@ -1777,9 +2062,9 @@ text-transform: uppercase;
                     DOM.heartButton.addEventListener('click', (e) => { e.stopPropagation(); this.toggleSave(); });
                     DOM.shareButton.addEventListener('click', (e) => { e.stopPropagation(); this.captureAndShare(); });
 
-                    // Triple-tap on main image opens admin overlay
                     let tapCount = 0, tapTimer;
-                    DOM.mainImage.addEventListener('click', () => {
+                    
+                    const handleTripleTap = () => {
                         tapCount++;
                         clearTimeout(tapTimer);
                         tapTimer = setTimeout(() => tapCount = 0, 400);
@@ -1787,15 +2072,19 @@ text-transform: uppercase;
                             tapCount = 0;
                             AdminMode.open();
                         }
-                    });
+                    };
+                    
+                    DOM.mainImage.addEventListener('click', handleTripleTap);
+                    DOM.mainVideo.addEventListener('click', handleTripleTap);
 
                     document.addEventListener('keydown', (e) => {
                         if (e.key === 'Escape') {
                             if (DOM.shareOverlay.classList.contains('active')) this.closeShare();
                             if (DOM.editOverlay.classList.contains('active')) EditMode.close();
                             if (DOM.adminOverlay.classList.contains('active')) AdminMode.close();
+                            if (DOM.productGrid.classList.contains('visible')) Utils.hideProductGrid();
                         }
-                        if (!Utils.isModalOpen()) {
+                        if (!Utils.isModalOpen() && !DOM.productGrid.classList.contains('visible')) {
                             if (e.key === 'ArrowRight') this.nextProduct();
                             if (e.key === 'ArrowLeft') this.prevProduct();
                             if (e.key === 's' || e.key === 'S') this.toggleSave();
@@ -1803,16 +2092,20 @@ text-transform: uppercase;
                     });
 
                     let touchStartX = 0;
-                    document.addEventListener('touchstart', (e) => { if (!Utils.isModalOpen()) touchStartX = e.touches[0].clientX; });
+                    document.addEventListener('touchstart', (e) => { 
+                        if (!Utils.isModalOpen() && !DOM.productGrid.classList.contains('visible')) {
+                            touchStartX = e.touches[0].clientX;
+                        }
+                    });
                     document.addEventListener('touchend', (e) => {
-                        if (Utils.isModalOpen()) return;
+                        if (Utils.isModalOpen() || DOM.productGrid.classList.contains('visible')) return;
                         const diffX = touchStartX - e.changedTouches[0].clientX;
                         if (Math.abs(diffX) > 50) diffX > 0 ? this.nextProduct() : this.prevProduct();
                     });
                 }
             };
 
-            // ---------- ADMIN MODE (minimal, triple-tap to open) ----------
+            // ---------- ADMIN MODE ----------
             const AdminMode = {
                 open() { DOM.adminOverlay.classList.add('active'); document.body.style.overflow='hidden'; },
                 close() { DOM.adminOverlay.classList.remove('active'); document.body.style.overflow=''; },
@@ -1847,23 +2140,37 @@ text-transform: uppercase;
                         this.toggleProductTypeControls(DOM.edit.productType.value);
                     });
 
+                    DOM.edit.mediaType.addEventListener('change', () => {
+                        this.toggleMediaControls(DOM.edit.mediaType.value);
+                    });
+
                     DOM.edit.bgType.addEventListener('change', () => {
                         this.toggleBackgroundControls(DOM.edit.bgType.value);
                     });
 
-                    // Populate product dropdown and listen for changes
                     DOM.edit.productSelect.addEventListener('change', (e) => {
                         this.loadProduct(parseInt(e.target.value));
                     });
                 },
 
                 toggleProductTypeControls(type) {
-                    if (type === 'image') {
-                        DOM.edit.imageControls.style.display = 'block';
-                        DOM.edit.textControls.style.display = 'none';
-                    } else {
-                        DOM.edit.imageControls.style.display = 'none';
+                    if (type === 'text') {
+                        DOM.edit.mediaControls.style.display = 'none';
                         DOM.edit.textControls.style.display = 'block';
+                    } else {
+                        DOM.edit.mediaControls.style.display = 'block';
+                        DOM.edit.textControls.style.display = 'none';
+                        this.toggleMediaControls(DOM.edit.mediaType.value);
+                    }
+                },
+
+                toggleMediaControls(mediaType) {
+                    if (mediaType === 'video') {
+                        DOM.edit.videoControls.style.display = 'block';
+                        DOM.edit.mediaUpload.accept = 'video/*';
+                    } else {
+                        DOM.edit.videoControls.style.display = 'none';
+                        DOM.edit.mediaUpload.accept = 'image/*';
                     }
                 },
 
@@ -1880,7 +2187,6 @@ text-transform: uppercase;
                     }
                 },
 
-                // Populate dropdown with current products
                 updateProductSelect() {
                     const select = DOM.edit.productSelect;
                     select.innerHTML = '';
@@ -1902,6 +2208,18 @@ text-transform: uppercase;
                     DOM.edit.productType.value = p.type || 'image';
                     this.toggleProductTypeControls(p.type || 'image');
 
+                    if (p.type !== 'text') {
+                        DOM.edit.mediaType.value = p.mediaType || 'image';
+                        DOM.edit.mediaUrl.value = p.image || '';
+                        this.toggleMediaControls(p.mediaType || 'image');
+                        
+                        if (p.videoOptions) {
+                            DOM.edit.videoAutoplay.checked = p.videoOptions.autoplay || false;
+                            DOM.edit.videoLoop.checked = p.videoOptions.loop || false;
+                            DOM.edit.videoMuted.checked = p.videoOptions.muted || true;
+                        }
+                    }
+
                     DOM.edit.title.value = p.title || '';
                     DOM.edit.creator.value = p.creator || '';
                     DOM.edit.description.value = p.description || '';
@@ -1915,7 +2233,6 @@ text-transform: uppercase;
                     DOM.edit.padding.value = frame.padding;
                     DOM.edit.paddingVal.textContent = frame.padding + 'px';
                     DOM.edit.objectFit.value = frame.objectFit || 'contain';
-                    DOM.edit.imageUrl.value = p.image || '';
 
                     const bg = p.background || CONFIG.DEFAULTS.BACKGROUND;
                     DOM.edit.bgType.value = bg.type || 'color';
@@ -1927,14 +2244,12 @@ text-transform: uppercase;
                     if (bg.color2) DOM.edit.gradientColor2.value = bg.color2;
                     if (bg.animation) DOM.edit.animationType.value = bg.animation;
 
-                    // Font styles
                     DOM.edit.fontFamily.value = p.fontFamily || CONFIG.DEFAULTS.FONT_FAMILY;
                     DOM.edit.fontSize.value = p.fontSize || CONFIG.DEFAULTS.FONT_SIZE;
                     DOM.edit.fontSizeVal.textContent = (p.fontSize || CONFIG.DEFAULTS.FONT_SIZE) + 'px';
                     DOM.edit.fontWeight.value = p.fontWeight || CONFIG.DEFAULTS.FONT_WEIGHT;
                     DOM.edit.textTransform.value = p.textTransform || CONFIG.DEFAULTS.TEXT_TRANSFORM;
 
-                    // Site settings
                     DOM.edit.siteBrand.value = State.brandText;
                     DOM.edit.logoUrl.value = State.logoUrl;
                     if (State.logoUrl) {
@@ -1944,7 +2259,7 @@ text-transform: uppercase;
                         DOM.edit.logoPreviewImg.style.display = 'none';
                     }
 
-                    this.updateProductSelect(); // ensure dropdown selection matches
+                    this.updateProductSelect();
                 },
 
                 open(index) {
@@ -1976,12 +2291,11 @@ text-transform: uppercase;
                             break;
                     }
 
-                    Object.assign(p, {
+                    const updates = {
                         type: DOM.edit.productType.value,
                         title: DOM.edit.title.value || 'Untitled',
                         creator: DOM.edit.creator.value || 'V.',
                         description: DOM.edit.description.value || '',
-                        content: DOM.edit.textContent.value || '',
                         orientation: DOM.edit.orientation.value,
                         background: bg,
                         frame: {
@@ -1994,39 +2308,51 @@ text-transform: uppercase;
                         fontSize: parseInt(DOM.edit.fontSize.value,10) || CONFIG.DEFAULTS.FONT_SIZE,
                         fontWeight: parseInt(DOM.edit.fontWeight.value,10) || CONFIG.DEFAULTS.FONT_WEIGHT,
                         textTransform: DOM.edit.textTransform.value || CONFIG.DEFAULTS.TEXT_TRANSFORM
-                    });
+                    };
 
-                    if (p.type === 'image' && DOM.edit.imageUrl.value) {
-                        p.image = DOM.edit.imageUrl.value;
+                    if (updates.type === 'text') {
+                        updates.content = DOM.edit.textContent.value || '';
+                    } else {
+                        updates.mediaType = DOM.edit.mediaType.value;
+                        updates.image = DOM.edit.mediaUrl.value;
+                        
+                        if (updates.mediaType === 'video') {
+                            updates.videoOptions = {
+                                autoplay: DOM.edit.videoAutoplay.checked,
+                                loop: DOM.edit.videoLoop.checked,
+                                muted: DOM.edit.videoMuted.checked
+                            };
+                        }
                     }
 
+                    Object.assign(p, updates);
                     Utils.saveToStorage();
                     VGallery.updateProductDisplay();
                     this.updateProductSelect();
                     Utils.showNotification('Product updated');
                 },
 
-                uploadImage() {
-                    const file = DOM.edit.imageUpload.files[0];
+                uploadMedia() {
+                    const file = DOM.edit.mediaUpload.files[0];
                     if (!file) { Utils.showNotification('Select a file','error'); return; }
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         State.products[this.currentEditIndex].image = e.target.result;
-                        DOM.edit.imageUrl.value = e.target.result;
+                        DOM.edit.mediaUrl.value = e.target.result;
                         Utils.saveToStorage();
                         VGallery.updateProductDisplay();
-                        Utils.showNotification('Image uploaded');
+                        Utils.showNotification('Media uploaded');
                     };
                     reader.readAsDataURL(file);
                 },
 
-                setImageFromUrl() {
-                    const url = DOM.edit.imageUrl.value;
+                setMediaFromUrl() {
+                    const url = DOM.edit.mediaUrl.value;
                     if (!url) { Utils.showNotification('Enter URL','error'); return; }
                     State.products[this.currentEditIndex].image = url;
                     Utils.saveToStorage();
                     VGallery.updateProductDisplay();
-                    Utils.showNotification('Image loaded');
+                    Utils.showNotification('Media loaded');
                 },
 
                 uploadBackground() {
@@ -2063,6 +2389,7 @@ text-transform: uppercase;
                     const newProduct = {
                         id: Date.now(),
                         type: 'image',
+                        mediaType: 'image',
                         title: 'New Product',
                         creator: 'V.',
                         description: 'Edit description',
@@ -2073,7 +2400,8 @@ text-transform: uppercase;
                         fontFamily: CONFIG.DEFAULTS.FONT_FAMILY,
                         fontSize: CONFIG.DEFAULTS.FONT_SIZE,
                         fontWeight: CONFIG.DEFAULTS.FONT_WEIGHT,
-                        textTransform: CONFIG.DEFAULTS.TEXT_TRANSFORM
+                        textTransform: CONFIG.DEFAULTS.TEXT_TRANSFORM,
+                        videoOptions: { ...CONFIG.DEFAULTS.VIDEO_OPTIONS }
                     };
                     State.addProduct(newProduct);
                     Utils.saveToStorage();
@@ -2083,7 +2411,6 @@ text-transform: uppercase;
                     Utils.showNotification('New product added');
                 },
 
-                // Navigation in edit mode
                 prevProduct() {
                     if (this.currentEditIndex > 0) {
                         this.currentEditIndex--;
@@ -2104,7 +2431,6 @@ text-transform: uppercase;
                     }
                 },
 
-                // Site settings
                 saveSiteSettings() {
                     const newBrand = DOM.edit.siteBrand.value.trim();
                     if (newBrand) Utils.saveBrandText(newBrand);
@@ -2133,7 +2459,6 @@ text-transform: uppercase;
                     Utils.showNotification('Logo updated');
                 },
 
-                // Batch operations
                 exportAll() { Utils.exportProducts(); },
                 importAll() {
                     const input = document.createElement('input');
