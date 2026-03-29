@@ -26,10 +26,7 @@
     "cloudinary": "^2.0.0",
     "@upstash/redis": "^1.28.0",
     "@sentry/node": "^7.100.0",
-    "@sentry/browser": "^7.100.0",
-    "express-rate-limit": "^7.1.0",
-    "helmet": "^7.1.0",
-    "cors": "^2.8.5"
+    "@sentry/browser": "^7.100.0"
   },
   "devDependencies": {
     "@netlify/functions": "^2.6.0",

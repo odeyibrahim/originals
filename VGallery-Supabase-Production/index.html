@@ -3,44 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="V. Gallery - Original Art + Merch | Discover unique artwork, limited edition prints, and handcrafted pieces">
-    <meta name="theme-color" content="#000000">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <!-- Open Graph / Social Media -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="V. Gallery">
-    <meta property="og:description" content="Original Art + Merch">
-    <meta property="og:image" content="/og-image.jpg">
-    <meta property="og:url" content="https://vgallery.netlify.app">
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="V. Gallery">
-    <meta name="twitter:description" content="Original Art + Merch">
-    <meta name="twitter:image" content="/og-image.jpg">
-    
     <title>V. Gallery | Original Art + Merch</title>
+    <meta name="description" content="V. Gallery - Original Art + Merch | Discover unique artwork">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="manifest" href="/manifest.json">
-    
-    <!-- Preconnect to external resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://js.paystack.co">
-    
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
-        <!-- Loading state -->
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
+    <!-- Intro Overlay -->
+    <div id="intro-overlay" class="intro-overlay">
+        <div class="intro-content">
+            <div class="intro-poem">"Art enables us to find ourselves<br>and lose ourselves at the same time."</div>
+            <div class="intro-signature">V. Gallery</div>
+            <button id="enter-gallery" class="enter-gallery">ENTER GALLERY</button>
         </div>
     </div>
-    
+
+    <!-- Main Split Container -->
+    <div id="split-container" class="split-container">
+        <!-- Top Half - Product Display -->
+        <div class="product-half">
+            <div class="logo-container">V.</div>
+            <button id="grid-icon" class="grid-icon-top">⊞</button>
+            <div class="frame-container">
+                <img id="product-image" class="product-image" src="" alt="">
+            </div>
+        </div>
+
+        <!-- Bottom Half - Product Info -->
+        <div class="info-half">
+            <div class="info-container">
+                <div class="title-section">
+                    <h1 id="product-title" class="product-title">Loading...</h1>
+                    <div id="product-author" style="font-size: 10px; color: #888; text-align: center;">V.</div>
+                </div>
+                <p id="product-description" class="description"></p>
+                <div class="price-row">
+                    <span id="product-price" class="price-tag"></span>
+                </div>
+                <div style="text-align: center;">
+                    <span id="stock-badge" class="stock-badge"></span>
+                </div>
+                <div class="action-bar">
+                    <button id="add-to-cart" class="action-btn">🛒</button>
+                    <button id="like-btn" class="action-btn">♥</button>
+                    <input type="number" id="quantity" value="1" min="1" style="width: 60px; text-align: center;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-arrows">
+            <button id="prev-btn" class="arrow-btn">←</button>
+            <span id="page-indicator" class="page-indicator">0 / 0</span>
+            <button id="next-btn" class="arrow-btn">→</button>
+        </div>
+        <div class="nav-right">
+            <button id="cart-icon" class="action-btn" style="position: relative;">🛒
+                <span id="cart-count" class="badge-count" style="display: none;">0</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Grid Overlay -->
+    <div id="grid-overlay" class="grid-overlay">
+        <div class="grid-header">
+            <span class="grid-title">GALLERY</span>
+            <span id="close-grid" class="breadcrumb">✕</span>
+        </div>
+        <div id="grid-container" class="grid-container"></div>
+    </div>
+
+    <!-- Checkout Overlay -->
+    <div id="checkout-overlay" class="checkout-overlay">
+        <div id="checkout-panel" class="checkout-panel">
+            <div class="checkout-header">
+                <h2>CHECKOUT</h2>
+                <span id="close-checkout" class="close-checkout">✕</span>
+            </div>
+            <div id="checkout-items" class="checkout-items"></div>
+            <div class="checkout-form">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="checkout-email" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="checkout-name" placeholder="Full name">
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="checkout-phone" placeholder="Phone number">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea id="checkout-address" rows="2" placeholder="Street address"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" id="checkout-city" placeholder="City">
+                </div>
+                <div class="payment-buttons">
+                    <button id="process-order" class="paystack-btn">PLACE ORDER</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Loading -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+    </div>
+
     <script type="module" src="/src/main.js"></script>
 </body>
 </html>

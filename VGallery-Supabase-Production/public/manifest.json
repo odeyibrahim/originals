@@ -1,0 +1,9 @@
+﻿{
+  "name": "V. Gallery",
+  "short_name": "V. Gallery",
+  "description": "Original Art + Merch",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000"
+}

@@ -5,27 +5,19 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  NPM_VERSION = "10"
 
 [dev]
   functions = "netlify/functions"
   port = 8888
   publish = "dist"
-  framework = "vite"
 
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
-  force = true
 
 [[redirects]]
   from = "/*"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/admin/*"
   to = "/index.html"
   status = 200
 
@@ -36,27 +28,5 @@
     X-Content-Type-Options = "nosniff"
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
-    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
-    Content-Security-Policy = """
-      default-src 'self';
-      script-src 'self' 'unsafe-inline' https://js.paystack.co https://checkout.flutterwave.com https://html2canvas.hertzen.com https://www.google.com https://www.gstatic.com;
-      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.cdnfonts.com;
-      font-src 'self' https://fonts.gstatic.com https://fonts.cdnfonts.com data:;
-      img-src 'self' https: data: blob:;
-      connect-src 'self' https://*.supabase.co https://api.exchangerate-api.com https://api.paystack.co https://*.cloudinary.com https://api.sendgrid.com;
-      frame-src https://*.paystack.com https://checkout.flutterwave.com;
-      base-uri 'self';
-      form-action 'self';
-    """
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/index.html"
-  [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
-
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.paystack.co https://checkout.flutterwave.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self' https://*.supabase.co https://api.paystack.co; frame-src https://*.paystack.com"

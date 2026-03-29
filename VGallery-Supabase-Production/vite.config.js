@@ -20,15 +20,13 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor-react': ['@supabase/supabase-js'],
-          'vendor-security': ['crypto-js', 'bcryptjs', 'jsonwebtoken'],
-          'vendor-payment': []
+          vendor: ['@supabase/supabase-js', 'crypto-js'],
+          vendorAuth: ['bcryptjs', 'jsonwebtoken']
         }
       }
     },
     target: 'es2020',
-    cssCodeSplit: true,
-    assetsInlineLimit: 4096
+    cssCodeSplit: true
   },
   server: {
     proxy: {
@@ -42,8 +40,7 @@ export default defineConfig({
     visualizer({
       filename: 'dist/stats.html',
       open: false,
-      gzipSize: true,
-      brotliSize: true
+      gzipSize: true
     })
   ]
 });
